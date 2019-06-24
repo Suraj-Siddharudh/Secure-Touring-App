@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_225531) do
+ActiveRecord::Schema.define(version: 2019_06_24_222219) do
 
   create_table "bookings", force: :cascade do |t|
     t.integer "no_of_seats"
@@ -80,8 +80,12 @@ ActiveRecord::Schema.define(version: 2019_03_01_225531) do
     t.string "provider"
     t.string "uid"
     t.boolean "is_admin"
+    t.integer "failed_attempts", default: 5, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
   create_table "waitlists", force: :cascade do |t|
