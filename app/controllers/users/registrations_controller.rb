@@ -11,6 +11,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
    def create
+    puts "Jai"
     @user = User.new(configure_sign_up_params)
      super
      if "Customer".eql? params[:user][:role]

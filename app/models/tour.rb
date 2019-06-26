@@ -7,6 +7,7 @@ class Tour < ApplicationRecord
 	mount_uploader :image, ImageUploader
 	serialize :image, JSON
 	validate :image_size_validation
+	# validate :valid_image_type
 	
 
 	validates_presence_of :Name, :pickup, :status, :countries, :states, :Description
@@ -19,6 +20,7 @@ class Tour < ApplicationRecord
 	# validate :valid_start_date?
 	validate :valid_end_date?
 	validate :valid_booking_deadline?
+
 
 	# def valid_start_date?
 	# 	errors.add(:start_date, "must be a Date") unless start_date.instance_of? Date
@@ -41,6 +43,18 @@ class Tour < ApplicationRecord
 	def image_size_validation
 		errors[:image] << "should be less than 5MB" if image.size > 5.megabytes
 	end
+
+	# def valid_image_type
+	# 	puts "<<<<<<<<<-------------------------->>>>>>>>>>>>>>"
+	# 	puts image
+	# 	starting_bytes = open(image).read
+	# 	puts starting_bytes
+	# 	# starting_bytes = image.read(8)
+	# 	# starting_bytes = image.readpartial(8)
+  	# 	puts "<<<<<<<<<-------------------------->>>>>>>>>>>>>>"
+  	# 	puts starting_bytes
+	# 	error.add(image, "Image type is not PNG") unless starting_bytes.eql? "89 50 4e 47 0d 0a 1a 0a"
+	# end
 
 	private
 

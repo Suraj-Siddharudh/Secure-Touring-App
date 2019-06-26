@@ -1,7 +1,7 @@
 class ImageUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
   storage :file
@@ -21,12 +21,24 @@ class ImageUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
+  process resize_to_fill: [500, 500]
   # Process files as they are uploaded:
   # process scale: [200, 300]
   #
   # def scale(width, height)
   #   # do something
   # end
+  # object = Tour.first
+
+  # puts filename
+  # image = MiniMagick::Image.open("uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}/"+filename)
+  # puts "<<<<<<<<<-------------------------->>>>>>>>>>>>>>"
+  # puts image
+
+  # starting_bytes = image.readpartial(8)
+  # puts "<<<<<<<<<-------------------------->>>>>>>>>>>>>>"
+  # puts starting_bytes
+  # error.add(image, "Image type is not PNG") unless starting_bytes.eql? "89 50 4e 47 0d 0a 1a 0a"
 
   # Create different versions of your uploaded files:
   # version :thumb do
@@ -40,8 +52,13 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   # Override the filename of the uploaded files:
-  # Avoid using model.id or version_name here, see uploader/store.rb for details.
-  # def filename
-  #   "something.jpg" if original_filename
-  # end
+  def filename
+    "#{secure_token(10)}.#{file.extension}" if original_filename.present?
+  end
+
+  protected
+  def secure_token(length=16)
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.hex(length/2))
+  end
 end
