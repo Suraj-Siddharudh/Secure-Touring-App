@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   #   end
   #   @user = User.find(params[:id])
   # end
-
+  
   # GET /users/new
   def new
     if user_signed_in? && !current_user.is_admin
