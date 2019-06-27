@@ -7,7 +7,7 @@ class User < ApplicationRecord
          
 
  validates_presence_of :email, :first_name
-#  validates :password, length: { in: 6..20 }, confirmation: true
+#  validates :password, length: { in: 6..21 }, confirmation: true
 
 
  has_many :tours
@@ -29,7 +29,7 @@ class User < ApplicationRecord
         first_name: auth.info.email.split('@')[0],
         is_agent: 0,
         is_customer: 1,
-        password: Devise.friendly_token[0,20],
+        password: Devise.friendly_token[20],
       )
     end
   end
