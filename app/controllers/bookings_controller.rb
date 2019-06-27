@@ -29,7 +29,11 @@ class BookingsController < ApplicationController
           @tour.avail_seats = seats_available
           @tour.avail_waitlist = @tour.avail_waitlist - waitlist.no_of_seats
           @tour.save
-          ConfirmationMailer.with(bookmark: waitlist.user_id).new_confirmation_mail.deliver_now
+          begin
+            ConfirmationMailer.with(bookmark: waitlist.user_id).new_confirmation_mail.deliver_now
+          rescue
+            flash[:notice] = "Cannot send the email right now, contact Admin!!"
+          end
           waitlist.destroy
         end
     end
@@ -103,7 +107,7 @@ class BookingsController < ApplicationController
   # POST /bookings.json
   # Allow Admin and Customer Only. Check if the user they say in request is actually what they are!!
   def create
-    if (current_user.is_admin || current_user.is_customer) && (current_user.id == booking_params[:user_id])
+    if (current_user.is_admin || current_user.is_customer) && (current_user.id == booking_params[:user_id].to_i)
       booking_params[:user_id] = current_user.id
       @booking = Booking.new(booking_params.except(:option))
       @tour = Tour.find(booking_params[:tour_id])
@@ -118,20 +122,26 @@ class BookingsController < ApplicationController
       if @booking.no_of_seats > @tour.avail_seats
         @overbooked = true
       end
+      # Check the no of seats booked
+      if @booking.no_of_seats < 1 or @booking.no_of_seats > 100
+        flash[:notice] = "Allowed to Book 1-100 Seats only"
+        redirect_to root_path and return
+      end
 
       respond_to do |format|
         if @overbooked
-          if booking_params['option'] == "Book only avaialble seats"
+          if booking_params['option'] == "Book only avaialble seats" and @tour.avail_seats > 0
             @booking.no_of_seats = @tour.avail_seats
             message = "We were able to book " + @booking.no_of_seats.to_s + " seats for you."
             ready = true
-          elsif booking_params['option'] == "Book all avaialble seats and waitlist remai, notice: message ning"
+          elsif booking_params['option'] == "Book all avaialble seats and waitlist remaining" and @tour.avail_seats > 0
             waitlist_count = @booking.no_of_seats - @tour.avail_seats
             @booking.no_of_seats = @tour.avail_seats
             waitlist = Waitlist.new({"user_id" => current_user.id, "tour_id" => booking_params[:tour_id], "no_of_seats" => waitlist_count}).save
             ready = true
             @tour.avail_waitlist = waitlist_count
             @tour.save
+            message = "We were able to book " + @booking.no_of_seats.to_s + " seats for you."
           elsif booking_params['option'] == "Add all seats to Waitlist"
             waitlist_count = @booking.no_of_seats
             @booking.no_of_seats = 0
@@ -139,6 +149,9 @@ class BookingsController < ApplicationController
             ready = true
             @tour.avail_waitlist = waitlist_count
             @tour.save
+          elsif booking_params['options'].present?
+            flash[:notice] = "Hello Bob!!! trying to change the options.. We don't support it :P "
+            redirect_to root_path and return
           else
           end
         end
@@ -149,8 +162,11 @@ class BookingsController < ApplicationController
           @tour.save
           format.html { redirect_to @booking, notice: message }
           format.json { render :show, status: :created, location: @booking }
+        elsif @booking.no_of_seats == 0 and ready
+          flash[:notice] = "Added the seats to waitlist"
+          redirect_to root_path and return
         else
-          flash[:notice] = "Booking Cannot be processed, check for No of Seats"
+          flash[:notice] = "Booking cannot be processed, check for No of Seats"
           format.html { render :new }
           format.json { render json: "Booking Cannot be processed, check for No of Seats", status: :unprocessable_entity }
         end
@@ -190,7 +206,7 @@ class BookingsController < ApplicationController
               format.json { render :show, status: :ok, location: @booking }
         else
               format.html { render :edit }
-              flash[:notice] = "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin  "
+              flash[:notice] = "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin"
         end
       end
     else
@@ -226,10 +242,10 @@ class BookingsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_booking
-        @booking = Booking.find_by(id: params[:id])
+      @booking = Booking.find_by(id: params[:id])
       if @booking.nil?
         respond_to do |format|
-          flash[:notice] = "Booking Cannot be found, contact Admin"
+          flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
           format.html { redirect_to root_path }
         end
       end

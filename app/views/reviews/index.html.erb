@@ -24,7 +24,11 @@
         <td><%= review.booking_id %></td>
         <td><%= link_to 'Show', review %></td>
         <% if current_user.is_admin || current_user.is_customer%>
-        <td><%= link_to 'Edit', edit_review_path(review) %></td>
+        <%
+=begin%>
+ <td><%= link_to 'Edit', edit_review_path(review) %></td> 
+<%
+=end%>
         <td><%= button_to 'Destroy', review, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <%end%>
       </tr>

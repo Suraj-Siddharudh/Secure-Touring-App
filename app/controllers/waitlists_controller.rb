@@ -1,14 +1,19 @@
 class WaitlistsController < ApplicationController
   before_action :set_waitlist, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!, only: [:show, :index]
   # GET /waitlists
   # GET /waitlists.json
   def index
     if current_user.is_admin
       @waitlists = Waitlist.all
     elsif current_user.is_agent
-      # tour_owner = Tour.where(id: params[:tour_id]).pluck(:user_id)
-      @waitlists = Waitlist.where(tour_id: params[:tour_id])#.where(user_id: tour_owner)
+      tour_owner = Tour.where(id: params[:tour_id]).pluck(:user_id)
+      if tour_owner[0] == current_user.id
+        @waitlists = Waitlist.where(tour_id: params[:tour_id])
+      else
+        flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+        redirect_to root_path and return
+      end
     elsif current_user.is_customer
       @waitlists = Waitlist.where(user_id: current_user.id)
     end
@@ -17,6 +22,16 @@ class WaitlistsController < ApplicationController
   # GET /waitlists/1
   # GET /waitlists/1.json
   def show
+    waitlist_user = Waitlist.where(id: params[:id]).pluck(:user_id)
+    waitlist_tour = Waitlist.where(id: params[:id]).pluck(:tour_id)
+    tour_agent = Tour.where(id: waitlist_tour[0]).pluck(:user_id)
+    if (waitlist_user[0] == current_user.id) or current_user.is_admin or (tour_agent[0] == current_user.id)
+    else
+      respond_to do |format|
+        flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+        format.html { redirect_to root_path }
+      end
+    end
   end
 
   # GET /waitlists/new
@@ -76,7 +91,13 @@ class WaitlistsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_waitlist
-      @waitlist = Waitlist.find(params[:id])
+      @waitlist = Waitlist.find_by(id: params[:id])
+      if @waitlist.nil?
+        respond_to do |format|
+          flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+          format.html { redirect_to root_path }
+        end
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

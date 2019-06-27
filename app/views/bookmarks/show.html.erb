@@ -26,6 +26,10 @@
 
 
     </div>
-  <%= link_to 'Back', tours_path, :class=>"btn btn-success" %>
   </div>
+  <%= link_to 'Back', tours_path, :class=>"btn btn-secondary float-right" %>
+  <br/>
+    <% if current_user.is_admin || ( current_user.is_customer && current_user.id == @bookmark.user_id) %>
+        <%= button_to 'Destroy', @bookmark, method: :delete, data: { confirm: 'Are you sure?' }, :class=>"btn btn-outline-danger"%>
+    <% end %>
 </div>
