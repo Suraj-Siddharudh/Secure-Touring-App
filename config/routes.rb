@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :tours
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
     # Custom Routes for Users
+    # match "*path", to: "tour_app#index", via: :all
     match '/user/new', to: 'users#new', via: 'get'
     match '/user/create', to: 'users#create', via: 'post'
     match '/user/:id/edit', to: 'users#edit', via: 'get', as: 'user_edit'
@@ -22,5 +23,9 @@ Rails.application.routes.draw do
   match '/tour/search' => 'tours#new_search', :via => 'get', :as => 'new_tour_search'
   match '/tour/search' => 'tours#search', :via => 'post', :as=> 'tour_search'
   root to: 'tour_app#index'
+
+    # having created corresponding controller and action
+    match "/404", :to => "errors#error_404", :via => :all
+    get '*path', to: 'errors#error_404', via: :all 
 
 end

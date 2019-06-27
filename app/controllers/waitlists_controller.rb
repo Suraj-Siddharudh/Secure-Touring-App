@@ -55,8 +55,9 @@ class WaitlistsController < ApplicationController
         format.html { redirect_to @waitlist, notice: 'Waitlist was successfully created.' }
         format.json { render :show, status: :created, location: @waitlist }
       else
+        logger.error @waitlist.errors
         format.html { render :new }
-        format.json { render json: @waitlist.errors, status: :unprocessable_entity }
+        format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
       end
     end
   end
@@ -70,8 +71,9 @@ class WaitlistsController < ApplicationController
         format.html { redirect_to @waitlist, notice: 'Waitlist was successfully updated.' }
         format.json { render :show, status: :ok, location: @waitlist }
       else
+        logger.error @waitlist.errors
         format.html { render :edit }
-        format.json { render json: @waitlist.errors, status: :unprocessable_entity }
+        format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
       end
     end
   end

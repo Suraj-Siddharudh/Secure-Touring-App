@@ -83,8 +83,9 @@ class UsersController < ApplicationController
         format.html { redirect_to root_path, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
+        logger.errors @user.errors
         format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
       end
     end
   end
@@ -155,8 +156,9 @@ class UsersController < ApplicationController
           format.html { redirect_to root_path, notice: 'User was successfully updated.' }
           format.json { render :show, status: :ok, location: @user }
         else
+          logger.error "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin"
           format.html { render :edit }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
+          format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
         end
       end
     else
@@ -183,7 +185,7 @@ end
       @user = User.find_by(id: params[:id])
       if @user.nil?
         respond_to do |format|
-          flash[:notice] = "User Cannot be found, contact Admin"
+          flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
           format.html { redirect_to root_path }
         end
       end

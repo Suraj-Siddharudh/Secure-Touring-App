@@ -100,8 +100,9 @@ class BookmarksController < ApplicationController
           format.html { redirect_to @bookmark, notice: 'Bookmark was successfully updated.' }
           format.json { render :show, status: :ok, location: @bookmark }
         else
+          logger.error @bookmark.errors
           format.html { render :edit }
-          format.json { render json: @bookmark.errors, status: :unprocessable_entity }
+          format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
         end
       end
     else

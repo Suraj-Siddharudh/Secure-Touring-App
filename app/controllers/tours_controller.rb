@@ -41,7 +41,6 @@ class ToursController < ApplicationController
   # POST /tours.json
   def create
     if current_user.is_admin || current_user.is_agent
-      puts "jai"
       @tour = Tour.new(tour_params)
       @tour.avail_seats = @tour.total_seats
       @tour.user_id = current_user.id
@@ -50,8 +49,9 @@ class ToursController < ApplicationController
           format.html { redirect_to @tour, notice: 'Tour was successfully created.' }
           format.json { render :show, status: :created, location: @tour }
         else
+          logger.error @tour.errors
           format.html { render :new }
-          format.json { render json: @tour.errors, status: :unprocessable_entity }
+          format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
         end
       end
     else
@@ -132,7 +132,7 @@ class ToursController < ApplicationController
       @tour = Tour.find_by(id: params[:id])
       if @tour.nil?
         respond_to do |format|
-          flash[:notice] = "Tour Cannot be found, contact Admin"
+          flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
           format.html { redirect_to root_path }
         end
       end
