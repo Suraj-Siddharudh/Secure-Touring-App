@@ -298,7 +298,7 @@ DEPENDENCIES
   faker!
   jbuilder (~> 2.11)
   jquery-rails
-  mini_magick (~> 4.8)
+  mini_magick (~> 4.11)
   omniauth
   omniauth-google-oauth2
   puma (~> 5.6)
