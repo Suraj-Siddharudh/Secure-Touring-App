@@ -37,7 +37,7 @@ gem 'jquery-rails'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
 # Use ActiveStorage variant
-gem 'mini_magick', '~> 4.11'
+gem 'mini_magick', '~> 4.12'
 gem 'city-state'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

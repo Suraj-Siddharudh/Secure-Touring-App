@@ -159,7 +159,7 @@ GEM
     marcel (1.0.2)
     matrix (0.4.2)
     method_source (1.0.0)
-    mini_magick (4.11.0)
+    mini_magick (4.12.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.16.3)
@@ -313,7 +313,7 @@ DEPENDENCIES
   faker!
   jbuilder (~> 2.11)
   jquery-rails
-  mini_magick (~> 4.11)
+  mini_magick (~> 4.12)
   omniauth
   omniauth-google-oauth2
   puma (~> 6.0)
