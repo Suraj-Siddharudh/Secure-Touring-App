@@ -27,7 +27,7 @@ gem 'coffee-rails', '~> 5.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.12'
+gem 'jbuilder', '~> 2.13'
 
 #Jquery
 gem 'jquery-rails'
@@ -37,7 +37,7 @@ gem 'jquery-rails'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'devise'
 # Use ActiveStorage variant
-gem 'mini_magick', '~> 4.12'
+gem 'mini_magick', '~> 4.13'
 gem 'city-state'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
