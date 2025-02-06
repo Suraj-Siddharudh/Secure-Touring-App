@@ -119,10 +119,10 @@ class ToursController < ApplicationController
   def search 
     @sp = params.fetch(:search_params, {})
     @tours = Tour.all
-    @tours = @tours.where('start_date >= ?', "%#{@sp['StartDate']}%")if @sp['StartDate'].present?
-    @tours = @tours.where('end_date >= ?', "#{@sp['EndDate']}") if @sp['EndDate'].present?
-    @tours = @tours.where(['Name LIKE ?', "%#{@sp['Name']}%"]) if @sp['Name'].present? && @sp['Name'] != ""
-    @tours = @tours.where(['countries LIKE ?', "%#{@sp['countries']}%"]) if @sp['countries'].present? && @sp['countries'] != ""
+    @tours = @tours.where('start_date >= ?', @sp['StartDate']) if @sp['StartDate'].present?
+    @tours = @tours.where('end_date >= ?', @sp['EndDate']) if @sp['EndDate'].present?
+    @tours = @tours.where('Name LIKE ?', "%#{@sp['Name']}%") if @sp['Name'].present? && @sp['Name'] != ""
+    @tours = @tours.where('countries LIKE ?', "%#{@sp['countries']}%") if @sp['countries'].present? && @sp['countries'] != ""
     @tours = @tours.where(:Price => PRICE_MAPPING[@sp['Price'].to_i][0]...PRICE_MAPPING[@sp['Price'].to_i][1]) if @sp['Price'].present?
   end
 
