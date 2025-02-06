@@ -1,6 +1,5 @@
 class ToursController < ApplicationController
   before_action :set_tour, only: [:show, :edit, :update, :destroy]
-  skip_before_action :verify_authenticity_token, only:[:search, :new_search]
   before_action :authenticate_user!
 
   # GET /tours
