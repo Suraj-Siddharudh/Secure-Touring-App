@@ -5,7 +5,7 @@ class Tour < ApplicationRecord
 	has_many :bookings
 	has_many :bookmark
 	mount_uploader :image, ImageUploader
-	serialize :image, JSON
+	serialize :image, coder: JSON
 	validate :image_size_validation
 	# validate :valid_image_type
 	
@@ -41,7 +41,7 @@ class Tour < ApplicationRecord
 
 # Image validation in image_uloader.rb
 	def image_size_validation
-		errors[:image] << "should be less than 5MB" if image.size > 5.megabytes
+		errors.add(:image, "should be less than 5MB") if image.size > 5.megabytes
 	end
 
 	# def valid_image_type

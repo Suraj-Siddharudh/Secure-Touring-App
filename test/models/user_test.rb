@@ -33,7 +33,7 @@ class UserTest < ActiveSupport::TestCase
   test "should not save user with existing email" do
     user = User.new
     user.first_name = "User"
-    user.email = "admin@touringapp.com"
+    user.email = users(:admin).email
     user.password = "password"
     user.is_admin = 1
     assert_not user.save

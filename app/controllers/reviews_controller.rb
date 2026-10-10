@@ -1,6 +1,6 @@
 class ReviewsController < ApplicationController
   before_action :set_review, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:show, :index, :destroy, :create, :new]
+  before_action :authorize_owner, only: [:edit, :update]
 
   # GET /reviews
   # GET /reviews.json
@@ -49,8 +49,7 @@ class ReviewsController < ApplicationController
   # POST /reviews.json
   def create
     if current_user.is_admin || current_user.is_customer
-      review_params[:user_id] = current_user.id
-      @review = Review.new(review_params)
+      @review = Review.new(review_params.merge(user_id: current_user.id))
 
       respond_to do |format|
         if @review.save
@@ -102,6 +101,13 @@ class ReviewsController < ApplicationController
   end
 
   private
+    # Only the author of a review or an admin may change it.
+    def authorize_owner
+      return if @review.nil? || @review.user_id == current_user.id || current_user.is_admin
+      flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+      redirect_to root_path
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_review
       @review = Review.find_by(id: params[:id])

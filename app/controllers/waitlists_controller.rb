@@ -1,6 +1,7 @@
 class WaitlistsController < ApplicationController
   before_action :set_waitlist, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:show, :index]
+  # Waitlists are normally created by BookingsController; direct edits are admin-only.
+  before_action :require_admin, only: [:new, :create, :edit, :update]
   # GET /waitlists
   # GET /waitlists.json
   def index
@@ -36,7 +37,6 @@ class WaitlistsController < ApplicationController
 
   # GET /waitlists/new
   def new
-    @tour = Tour.find(@tour_id)
     @waitlist = Waitlist.new
   end
 
@@ -48,7 +48,6 @@ class WaitlistsController < ApplicationController
   # POST /waitlists.json
   def create
     @waitlist = Waitlist.new(waitlist_params)
-    @tour = Tour.find(waitlist_params[:tour_id])
 
     respond_to do |format|
       if @waitlist.save
@@ -81,7 +80,10 @@ class WaitlistsController < ApplicationController
   # DELETE /waitlists/1
   # DELETE /waitlists/1.json
   def destroy
-    
+    unless @waitlist.user_id == current_user.id || current_user.is_admin
+      flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+      redirect_to root_path and return
+    end
     @waitlist.destroy
 
     respond_to do |format|
@@ -91,6 +93,12 @@ class WaitlistsController < ApplicationController
   end
 
   private
+    def require_admin
+      return if current_user.is_admin
+      flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+      redirect_to root_path
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_waitlist
       @waitlist = Waitlist.find_by(id: params[:id])

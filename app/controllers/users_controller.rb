@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :validate_user, only: [:show, :update, :destroy, :index, :new], :if => lambda{ Rails.env.test?}
   before_action :authenticate_user!
 
   # GET /users
@@ -10,6 +9,7 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to root_path }
       end
+      return
     end
     @users = User.all
   end
@@ -32,6 +32,7 @@ class UsersController < ApplicationController
         flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
         format.html { redirect_to root_path }
       end
+      return
     end
     @user = User.new
   end
@@ -64,12 +65,9 @@ class UsersController < ApplicationController
         flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
         format.html { redirect_to root_path }
       end
+      return
     end
     @user = User.new(user_params)
-    puts "<<<-------------------->>>"
-    puts "User===>\n"
-    puts @user.role
-    puts "***--------------------***"
     if @user.role.eql?"Customer"
       @user.is_customer = 1
       @user.is_agent = 0
@@ -83,7 +81,7 @@ class UsersController < ApplicationController
         format.html { redirect_to root_path, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        logger.errors @user.errors
+        logger.error @user.errors.full_messages.to_sentence
         format.html { render :new }
         format.json { render json: "We encountered an unprecedented error. Systems will recover soon... You may try again after some time. If the Issue persist, contact Admin", status: :unprocessable_entity }
       end
@@ -95,6 +93,7 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to root_path }
       end
+      return
     end
     @users= User.where(is_customer: 1)
   end
@@ -104,6 +103,7 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html { redirect_to root_path }
       end
+      return
     end
     @users= User.where(is_agent: 1)
   end
@@ -126,18 +126,19 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    if params[:id]!= 1
-      if (params[:id].to_i == current_user.id) or current_user.is_admin
-        @user.destroy
-        respond_to do |format|
-          format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-          format.json { head :no_content }
-        end
-      else
-        respond_to do |format|
-          flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
-          format.html { redirect_to root_path }
-        end
+    if @user.is_admin
+      redirect_to root_path, notice: "Admin accounts cannot be deleted." and return
+    end
+    if (params[:id].to_i == current_user.id) or current_user.is_admin
+      @user.destroy
+      respond_to do |format|
+        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        flash[:notice] = "Hello Bob!! trying to bypass access controls.. You ain't Gonna Succeed :P "
+        format.html { redirect_to root_path }
       end
     end
   end
@@ -167,16 +168,6 @@ class UsersController < ApplicationController
         format.html { redirect_to root_path }
       end
     end
-end
-
-def validate_user
-  if !user_signed_in?
-    redirect_to root_path
-  end
-
-  if @user != @current_user
-    redirect_to root_path
-  end
 end
 
   private

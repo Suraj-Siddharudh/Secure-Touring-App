@@ -1,11 +1,50 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+admin:
+  email: admin@example.com
+  first_name: Admin
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  is_admin: true
+  is_agent: false
+  is_customer: false
+  failed_attempts: 0
+
+agent:
+  email: agent@example.com
+  first_name: Agent
+  role: Agent
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  is_admin: false
+  is_agent: true
+  is_customer: false
+  failed_attempts: 0
+
+other_agent:
+  email: other_agent@example.com
+  first_name: Other
+  role: Agent
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  is_admin: false
+  is_agent: true
+  is_customer: false
+  failed_attempts: 0
+
+customer:
+  email: customer@example.com
+  first_name: Customer
+  role: Customer
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  is_admin: false
+  is_agent: false
+  is_customer: true
+  failed_attempts: 0
+
+other_customer:
+  email: other_customer@example.com
+  first_name: Another
+  role: Customer
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  is_admin: false
+  is_agent: false
+  is_customer: true
+  failed_attempts: 0
