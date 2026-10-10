@@ -2,16 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_24_222219) do
-
+ActiveRecord::Schema[8.1].define(version: 2026_10_10_000000) do
   create_table "bookings", force: :cascade do |t|
     t.integer "no_of_seats"
     t.integer "user_id"
@@ -80,7 +79,7 @@ ActiveRecord::Schema.define(version: 2019_06_24_222219) do
     t.string "provider"
     t.string "uid"
     t.boolean "is_admin"
-    t.integer "failed_attempts", default: 5, null: false
+    t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -97,5 +96,4 @@ ActiveRecord::Schema.define(version: 2019_06_24_222219) do
     t.index ["tour_id"], name: "index_waitlists_on_tour_id"
     t.index ["user_id"], name: "index_waitlists_on_user_id"
   end
-
 end

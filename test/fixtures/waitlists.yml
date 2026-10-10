@@ -1,7 +1,4 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  no_of_seats: 1
-
-two:
-  no_of_seats: 1
+customer_rome:
+  no_of_seats: 3
+  user: customer
+  tour: rome

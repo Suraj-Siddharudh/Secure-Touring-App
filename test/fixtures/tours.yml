@@ -1,11 +1,31 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+paris:
+  Name: Paris Highlights
+  Description: Five days in Paris
+  Price: 2500
+  start_date: <%= 20.days.from_now.to_date %>
+  end_date: <%= 25.days.from_now.to_date %>
+  booking_deadline: <%= 10.days.from_now.to_date %>
+  pickup: true
+  status: Active
+  countries: France
+  states: Paris
+  total_seats: 20
+  avail_seats: 18
+  avail_waitlist: 0
+  user: agent
 
-one:
-  Name: MyString
-  Description: MyText
-  Price: 1.5
-
-two:
-  Name: MyString
-  Description: MyText
-  Price: 1.5
+rome:
+  Name: Rome Classic
+  Description: Ancient Rome walking tour
+  Price: 3000
+  start_date: <%= 30.days.from_now.to_date %>
+  end_date: <%= 35.days.from_now.to_date %>
+  booking_deadline: <%= 15.days.from_now.to_date %>
+  pickup: false
+  status: Active
+  countries: Italy
+  states: Lazio
+  total_seats: 10
+  avail_seats: 10
+  avail_waitlist: 0
+  user: other_agent

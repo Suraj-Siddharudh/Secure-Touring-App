@@ -1,15 +1,6 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  subject: MyString
-  content: MyText
-  user: one
-  tour: one
-  booking: one
-
-two:
-  subject: MyString
-  content: MyText
-  user: two
-  tour: two
-  booking: two
+customer_paris:
+  subject: Great trip
+  content: Loved it
+  user: customer
+  tour: paris
+  booking: customer_paris

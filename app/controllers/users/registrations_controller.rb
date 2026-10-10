@@ -14,17 +14,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @user = User.new(configure_sign_up_params)
      super
      if "Customer".eql? params[:user][:role]
-      puts "----------------------"
-      puts "Customer"
-      puts params[:user][:role]
-      puts "Customer" <=> params[:user][:role]
-      puts "---------------------"
       @user.is_agent = 0
       @user.is_customer = 1
       @user.save
     else
-      puts "----------------------"
-      puts "Agent"
       @user.is_agent = 1
       @user.is_customer = 0
       @user.save
